@@ -18,6 +18,7 @@
 	] as const;
 	type ThemeName = (typeof themes)[number]['value'];
 
+	let titleHovered = $state(false);
 	let activeTheme = $state<ThemeName>('nightfox');
 
 	function isThemeName(value: string): value is ThemeName {
@@ -43,7 +44,23 @@
 <header
 	class="fixed top-2 right-2 left-2 z-10 flex h-12 items-center justify-between gap-3 border-4 border-bg-dim bg-bg py-2 px-3 text-accent"
 >
-	<span>fastfetch config generator <a href="https://github.com/gabors0/fastfetch-cfg-gen" target="_blank" class="text-fg-dim">alpha ver.</a></span>
+	<span
+	>
+		<span
+		role="group"
+		aria-label="Site title"
+		onmouseenter={() => (titleHovered = true)}
+		onmouseleave={() => (titleHovered = false)}
+		>{titleHovered ? 'fastfetch config maker' : 'configfetch'}</span>
+		<a
+			href="https://github.com/gabors0/fastfetch-cfg-gen"
+			target="_blank"
+			rel="noopener noreferrer"
+			class="text-fg-dim"
+		>
+			alpha ver.
+		</a>
+	</span>
 	<div class="flex items-center gap-3 flex-row">
 		<div class="flex items-center gap-1.5" role="group" aria-label="Theme">
 			{#each themes as theme (theme.value)}
@@ -60,9 +77,9 @@
 			{/each}
 		</div>
 		{#if page.url.pathname === '/'}
-			<a href="{resolve('/about')}">About&gt;&gt;</a>
+			<a href={resolve('/about')}>About&gt;&gt;</a>
 		{:else if page.url.pathname === '/about'}
-			<a href="{resolve('/')}">&lt;&lt;Back</a>
+			<a href={resolve('/')}>&lt;&lt;Back</a>
 		{/if}
 	</div>
 </header>
