@@ -257,7 +257,7 @@
 		<legend>Config</legend>
 		<div class="flex h-full min-h-0 flex-col gap-2">
 			<nav
-				class="flex max-w-full gap-1 overflow-x-auto border-b-2 border-bg-dim pb-2"
+				class="flex max-w-full gap-1 overflow-x-auto border-b-2 border-border pb-2"
 				aria-label="Config sections"
 			>
 				{#each tabs as tab (tab.id)}
@@ -342,7 +342,7 @@
 					<section class="grid gap-2 py-2 first:py-0" aria-label="Configured modules">
 						{#each modules as moduleItem (moduleItem.type)}
 							{@const controls = moduleControls(moduleItem)}
-							<details class="border-2 border-bg-dim bg-bg-soft">
+							<details class="border-2 border-border bg-bg-soft">
 								<summary
 									class="grid cursor-pointer grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 px-2 py-2 text-sm text-fg-muted"
 								>
@@ -361,7 +361,7 @@
 								</summary>
 								{#if controls.length}
 									<div
-										class="grid grid-cols-1 gap-1.5 border-t-2 border-bg-dim p-1.5 sm:grid-cols-2 xl:grid-cols-3"
+										class="grid grid-cols-1 gap-1.5 border-t-2 border-border p-1.5 sm:grid-cols-2 xl:grid-cols-3"
 									>
 										{#each controls as control (control.path)}
 											<label
@@ -451,14 +451,14 @@
 <style lang="postcss">
 	@reference "/src/routes/layout.css";
 	fieldset {
-		@apply m-0 min-w-0 border-4 border-bg-dim px-2;
+		@apply m-0 min-w-0 border-4 border-border px-2;
 	}
 	legend {
 		@apply text-accent-muted;
 	}
 	input,
 	select {
-		@apply min-h-7 w-full min-w-0 border-2 border-bg-muted bg-bg-soft px-1.5 text-fg outline-none;
+		@apply min-h-7 w-full min-w-0 border-2 border-border bg-bg-soft px-1.5 text-fg outline-none;
 	}
 	input:focus,
 	select:focus {

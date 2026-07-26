@@ -10,7 +10,7 @@
 
 	const themes = [
 		{ value: 'nightfox', label: 'Nightfox', background: '#131a24' },
-		{ value: 'dayfox', label: 'Dayfox', background: '#e4dcd4' },
+		{ value: 'dawnfox', label: 'Dawnfox', background: '#ebe5df' },
 		{ value: 'duskfox', label: 'Duskfox', background: '#191726' },
 		{ value: 'nordfox', label: 'Nordfox', background: '#232831' },
 		{ value: 'terafox', label: 'Terafox', background: '#0f1c1e' },
@@ -42,7 +42,7 @@
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 <header
-	class="fixed top-2 right-2 left-2 z-10 flex h-12 items-center justify-between gap-3 border-4 border-bg-dim bg-bg py-2 px-3 text-accent"
+	class="fixed top-2 right-2 left-2 z-10 flex h-12 items-center justify-between gap-3 border-4 border-border bg-bg py-2 px-3 text-accent"
 >
 	<span
 	>
