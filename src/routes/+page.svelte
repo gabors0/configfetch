@@ -108,7 +108,20 @@
 		const index = moduleIndex(moduleItem.type);
 
 		if (enabled && index === -1) {
-			config.modules = [...config.modules, defaultModuleConfig(moduleItem)];
+			const catalogIndex = moduleCatalog.findIndex((item) => item.type === moduleItem.type);
+			const insertAt = config.modules.findIndex((item) => {
+				const itemCatalogIndex = moduleCatalog.findIndex(
+					(catalogItem) => catalogItem.type === moduleType(item)
+				);
+				return itemCatalogIndex > catalogIndex;
+			});
+			const targetIndex = insertAt === -1 ? config.modules.length : insertAt;
+
+			config.modules = [
+				...config.modules.slice(0, targetIndex),
+				defaultModuleConfig(moduleItem),
+				...config.modules.slice(targetIndex)
+			];
 			return;
 		}
 
