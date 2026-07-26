@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import PatternHeading from '$lib/components/PatternHeading.svelte';
 	import Preview from '$lib/components/preview/Preview.svelte';
 
@@ -20,6 +21,9 @@
 	let showExport = $state(true);
 	let activeTab = $state<'modules' | 'logo' | 'appearance' | 'formatting' | 'advanced'>('modules');
 	let resetPending = $state(false);
+	let storageReady = $state(false);
+
+	const configStorageKey = 'fastfetch-config';
 
 	const tabs = [
 		{ id: 'modules', label: 'Modules' },
@@ -28,6 +32,48 @@
 		{ id: 'formatting', label: 'Formatting' },
 		{ id: 'advanced', label: 'Advanced' }
 	] as const;
+
+	function isAppConfig(value: unknown): value is AppConfig {
+		return (
+			typeof value === 'object' &&
+			value !== null &&
+			'logo' in value &&
+			typeof value.logo === 'object' &&
+			value.logo !== null &&
+			'modules' in value &&
+			Array.isArray(value.modules)
+		);
+	}
+
+	function loadStoredConfig() {
+		try {
+			const storedConfig = localStorage.getItem(configStorageKey);
+
+			if (!storedConfig) return null;
+
+			const parsedConfig: unknown = JSON.parse(storedConfig);
+			return isAppConfig(parsedConfig) ? parsedConfig : null;
+		} catch {
+			return null;
+		}
+	}
+
+	onMount(() => {
+		const storedConfig = loadStoredConfig();
+
+		if (storedConfig) config = storedConfig;
+		storageReady = true;
+	});
+
+	$effect(() => {
+		if (!storageReady) return;
+
+		try {
+			localStorage.setItem(configStorageKey, JSON.stringify(config));
+		} catch {
+			// Storage can be unavailable in restricted browser contexts.
+		}
+	});
 
 	// Form control helpers
 	function inputValue(event: Event) {
@@ -248,6 +294,8 @@
 		resetPending = false;
 	}
 
+	let previewFontSize = $state(12);
+
 	// Config export
 	let exportJson = $derived(JSON.stringify(config, null, 2));
 
@@ -285,11 +333,25 @@
 				>
 					[{showPreview ? 'hide' : 'show'}]
 				</button>
+				<button
+					type="button"
+					class="legend-action"
+					onclick={() => (previewFontSize += 1)}
+				>
+				[+]
+				</button>
+				<button
+					type="button"
+					class="legend-action"
+					onclick={() => (previewFontSize = Math.max(previewFontSize - 1, 1))}
+				>
+				[-]
+				</button>
 			</span>
 			<span class="block md:hidden">Preview</span>
 		</legend>
 		{#if showPreview}
-			<Preview {config} />
+			<Preview {config} {previewFontSize} />
 		{/if}
 	</fieldset>
 	<fieldset class="min-h-128 md:row-span-2 md:min-h-0">
@@ -430,9 +492,11 @@
 									>
 								</summary>
 								{#if controls.length}
-									<div
-										class="grid grid-cols-1 gap-1.5 border-t-2 border-border p-1.5 sm:grid-cols-2 xl:grid-cols-3"
-									>
+									<p class="border-t-2 border-border px-2 py-1 text-xs text-fg-muted">
+										<span class="text-accent-muted" aria-hidden="true">[note]</span>
+										<span class="italic">Italic labels</span> mean that they won't change the preview.
+									</p>
+									<div class="grid grid-cols-1 gap-1.5 p-1.5 sm:grid-cols-2 xl:grid-cols-3">
 										{#each controls as control (control.path)}
 											<label
 												class:items-start={control.type === 'checkbox'}

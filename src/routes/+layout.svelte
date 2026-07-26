@@ -6,6 +6,8 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 
+	import { VERSION } from '$lib/config/version';
+
 	let { children } = $props();
 
 	const themes = [
@@ -52,14 +54,7 @@
 		onmouseenter={() => (titleHovered = true)}
 		onmouseleave={() => (titleHovered = false)}
 		>{titleHovered ? 'fastfetch config maker' : 'configfetch'}</span>
-		<a
-			href="https://github.com/gabors0/fastfetch-cfg-gen"
-			target="_blank"
-			rel="noopener noreferrer"
-			class="text-fg-dim"
-		>
-			alpha ver.
-		</a>
+			<span class="text-fg-dim">ver. {VERSION}</span>
 	</span>
 	<div class="flex items-center gap-3 flex-row">
 		<div class="flex items-center gap-1.5" role="group" aria-label="Theme">

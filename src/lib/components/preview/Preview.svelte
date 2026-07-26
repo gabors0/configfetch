@@ -3,7 +3,7 @@
 	import type { AppConfig } from '$lib/config/types';
 	import PreviewModules from './PreviewModules.svelte';
 
-	let { config }: { config: AppConfig } = $props();
+	let { config, previewFontSize }: { config: AppConfig; previewFontSize: number } = $props();
 
 	function isRecord(value: unknown): value is Record<string, unknown> {
 		return typeof value === 'object' && value !== null;
@@ -23,10 +23,10 @@
 		return display.key.type;
 	}
 </script>
-
 <div
+	style:font-size="{previewFontSize}px"
 	class={[
-		'flex text-xs',
+		'flex',
 		config.logo.position === 'top'
 			? 'flex-col'
 			: config.logo.position === 'right'
