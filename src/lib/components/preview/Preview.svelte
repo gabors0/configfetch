@@ -23,7 +23,6 @@
 		return display.key.type;
 	}
 </script>
-
 <div
 	style:font-size="{previewFontSize}px"
 	class={[

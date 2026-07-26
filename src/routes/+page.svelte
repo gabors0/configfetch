@@ -492,9 +492,11 @@
 									>
 								</summary>
 								{#if controls.length}
-									<div
-										class="grid grid-cols-1 gap-1.5 border-t-2 border-border p-1.5 sm:grid-cols-2 xl:grid-cols-3"
-									>
+									<p class="border-t-2 border-border px-2 py-1 text-xs text-fg-muted">
+										<span class="text-accent-muted" aria-hidden="true">[note]</span>
+										<span class="italic">Italic labels</span> mean that they won't change the preview.
+									</p>
+									<div class="grid grid-cols-1 gap-1.5 p-1.5 sm:grid-cols-2 xl:grid-cols-3">
 										{#each controls as control (control.path)}
 											<label
 												class:items-start={control.type === 'checkbox'}
