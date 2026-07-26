@@ -1,21 +1,34 @@
 <script lang="ts">
 	import PatternHeading from '$lib/components/PatternHeading.svelte';
+	import Preview from '$lib/components/preview/Preview.svelte';
+
 	import { defaultConfig } from '$lib/config/defaultConfig';
-	import type { AppConfig, ModuleEntry, Control, Group, ModuleItem } from '$lib/config/types';
 	import {
 		logoGroups,
 		appearanceGroups,
 		formattingGroups,
 		advancedGroups,
-		modules,
+		modules as moduleCatalog,
 		withPreviewStatus
 	} from '$lib/config/formSchema';
 	import { getConfigValue, setConfigValue } from '$lib/config/helpers';
+	import type { AppConfig, Control, Group, ModuleEntry, ModuleItem } from '$lib/config/types';
 
-	import Preview from '$lib/components/preview/Preview.svelte';
-
+	// Page state and navigation
 	let config = $state<AppConfig>(structuredClone(defaultConfig) as AppConfig);
+	let showPreview = $state(true);
+	let showExport = $state(true);
+	let activeTab = $state<'modules' | 'logo' | 'appearance' | 'formatting' | 'advanced'>('modules');
 
+	const tabs = [
+		{ id: 'modules', label: 'Modules' },
+		{ id: 'logo', label: 'Logo' },
+		{ id: 'appearance', label: 'Appearance' },
+		{ id: 'formatting', label: 'Formatting' },
+		{ id: 'advanced', label: 'Advanced' }
+	] as const;
+
+	// Form control helpers
 	function inputValue(event: Event) {
 		return (event.currentTarget as HTMLInputElement).value;
 	}
@@ -29,18 +42,6 @@
 		return value === '' ? null : Number(value);
 	}
 
-	let showPreview = $state(true);
-	let showExport = $state(true);
-	let activeTab = $state<'modules' | 'logo' | 'appearance' | 'formatting' | 'advanced'>('modules');
-
-	const tabs = [
-		{ id: 'modules', label: 'Modules' },
-		{ id: 'logo', label: 'Logo' },
-		{ id: 'appearance', label: 'Appearance' },
-		{ id: 'formatting', label: 'Formatting' },
-		{ id: 'advanced', label: 'Advanced' }
-	] as const;
-
 	function valueOf(control: Control) {
 		const value = getConfigValue(config, control.path, control.value);
 		return value == null ? '' : String(value);
@@ -50,18 +51,42 @@
 		return getConfigValue(config, control.path, control.value) === true;
 	}
 
+	// Module state and management
+	function moduleType(module: ModuleEntry) {
+		return typeof module === 'string' ? module : module.type;
+	}
+
 	function moduleIndex(type: string) {
 		return config.modules.findIndex((item) =>
 			typeof item === 'string' ? item === type : item.type === type
 		);
 	}
 
-	function moduleEnabled(moduleItem: ModuleItem) {
-		return moduleIndex(moduleItem.type) !== -1;
-	}
+	let enabledModules = $derived(
+		config.modules
+			.map((entry) => {
+				const type = moduleType(entry);
+				return moduleCatalog.find((item) => item.type === type);
+			})
+			.filter((item) => item !== undefined)
+	);
 
-	function moduleType(module: ModuleEntry) {
-		return typeof module === 'string' ? module : module.type;
+	let disabledModules = $derived(moduleCatalog.filter((item) => moduleIndex(item.type) === -1));
+
+	function moveModule(type: string, direction: -1 | 1) {
+		const currentIndex = moduleIndex(type);
+		const targetIndex = currentIndex + direction;
+
+		if (currentIndex === -1 || targetIndex < 0 || targetIndex >= config.modules.length) {
+			return;
+		}
+		const nextModules = [...config.modules];
+
+		[nextModules[currentIndex], nextModules[targetIndex]] = [
+			nextModules[targetIndex],
+			nextModules[currentIndex]
+		];
+		config.modules = nextModules;
 	}
 
 	function defaultModuleConfig(moduleItem: ModuleItem): ModuleEntry {
@@ -83,20 +108,7 @@
 		const index = moduleIndex(moduleItem.type);
 
 		if (enabled && index === -1) {
-			const catalogIndex = modules.findIndex((item) => item.type === moduleItem.type);
-			const insertAt = config.modules.findIndex((item) => {
-				const itemCatalogIndex = modules.findIndex(
-					(catalogItem) => catalogItem.type === moduleType(item)
-				);
-				return itemCatalogIndex > catalogIndex;
-			});
-			const targetIndex = insertAt === -1 ? config.modules.length : insertAt;
-
-			config.modules = [
-				...config.modules.slice(0, targetIndex),
-				defaultModuleConfig(moduleItem),
-				...config.modules.slice(targetIndex)
-			];
+			config.modules = [...config.modules, defaultModuleConfig(moduleItem)];
 			return;
 		}
 
@@ -105,6 +117,7 @@
 		}
 	}
 
+	// Module settings controls
 	function moduleSharedControls(module: ModuleItem): Control[] {
 		const basePath = `modules.${module.type}`;
 		const controls: Control[] = [];
@@ -175,6 +188,7 @@
 		return [...moduleSharedControls(module), ...module.controls];
 	}
 
+	// Active section and page layout
 	function activeTabLabel() {
 		return tabs.find((tab) => tab.id === activeTab)?.label ?? 'Config';
 	}
@@ -210,6 +224,7 @@
 		return 'grid-rows-[auto_auto_auto] md:grid-rows-[auto_auto]';
 	}
 
+	// Config export
 	let exportJson = $derived(JSON.stringify(config, null, 2));
 
 	function copyExport() {
@@ -340,24 +355,50 @@
 				{:else}
 					<!-- modules tab -->
 					<section class="grid gap-2 py-2 first:py-0" aria-label="Configured modules">
-						{#each modules as moduleItem (moduleItem.type)}
+						{#snippet moduleDetails(moduleItem: ModuleItem)}
 							{@const controls = moduleControls(moduleItem)}
+							{@const index = moduleIndex(moduleItem.type)}
+							{@const enabled = index !== -1}
 							<details class="border-2 border-border bg-bg-soft">
 								<summary
-									class="grid cursor-pointer grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 px-2 py-2 text-sm text-fg-muted"
+									class="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 px-2 py-2 text-sm text-fg-muted"
 								>
 									<div>
 										<input
 											type="checkbox"
-											checked={moduleEnabled(moduleItem)}
+											checked={enabled}
 											onclick={(event) => event.stopPropagation()}
 											onchange={(event) => setModuleEnabled(moduleItem, inputChecked(event))}
 										/>
 										<span
-											class="overflow-hidden font-bold text-ellipsis whitespace-nowrap text-accent"
-											>{moduleItem.type}</span
+											class:text-accent={enabled}
+											class:text-fg-dim={!enabled}
+											class="overflow-hidden cursor-pointer font-bold text-ellipsis whitespace-nowrap"
+											>{moduleItem.type} <span class="module-disclosure-closed">&gt;</span><span
+												class="module-disclosure-open">&lt;</span
+											></span
 										>
 									</div>
+									<button
+										type="button"
+										disabled={index <= 0}
+										aria-label={`Move ${moduleItem.type} up`}
+										class="cursor-pointer"
+										onclick={(event) => {
+											event.stopPropagation();
+											moveModule(moduleItem.type, -1);
+										}}>[↑]</button
+									>
+									<button
+										type="button"
+										disabled={index === -1 || index === config.modules.length - 1}
+										aria-label={`Move ${moduleItem.type} down`}
+										class="cursor-pointer"
+										onclick={(event) => {
+											event.stopPropagation();
+											moveModule(moduleItem.type, 1);
+										}}>[↓]</button
+									>
 								</summary>
 								{#if controls.length}
 									<div
@@ -419,7 +460,19 @@
 									</div>
 								{/if}
 							</details>
+						{/snippet}
+
+						{#each enabledModules as moduleItem (moduleItem.type)}
+							{@render moduleDetails(moduleItem)}
 						{/each}
+
+						{#if disabledModules.length}
+							<PatternHeading title="Disabled modules" />
+
+							{#each disabledModules as moduleItem (moduleItem.type)}
+								{@render moduleDetails(moduleItem)}
+							{/each}
+						{/if}
 					</section>
 				{/if}
 			</div>
@@ -481,5 +534,12 @@
 	}
 	.legend-action {
 		@apply cursor-pointer hover:underline;
+	}
+	.module-disclosure-open,
+	details[open] .module-disclosure-closed {
+		display: none;
+	}
+	details[open] .module-disclosure-open {
+		display: inline;
 	}
 </style>

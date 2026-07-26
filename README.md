@@ -16,7 +16,7 @@ A browser-based editor with the goal of making [fastfetch](https://github.com/fa
 - Import a config to edit
 #### Small
 - Add color support to the preview
-- Add, remove and change the order of the modules
+- ~~Add, remove and change the order of the modules~~
 
 ## Development
 The project uses Bun, SvelteKit with Svelte 5, Tailwind v4 and Vite.
