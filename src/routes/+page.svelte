@@ -19,6 +19,7 @@
 	let showPreview = $state(true);
 	let showExport = $state(true);
 	let activeTab = $state<'modules' | 'logo' | 'appearance' | 'formatting' | 'advanced'>('modules');
+	let resetPending = $state(false);
 
 	const tabs = [
 		{ id: 'modules', label: 'Modules' },
@@ -237,6 +238,16 @@
 		return 'grid-rows-[auto_auto_auto] md:grid-rows-[auto_auto]';
 	}
 
+	function resetConfig() {
+		if (!resetPending) {
+			resetPending = true;
+			return;
+		}
+
+		config = structuredClone(defaultConfig) as AppConfig;
+		resetPending = false;
+	}
+
 	// Config export
 	let exportJson = $derived(JSON.stringify(config, null, 2));
 
@@ -282,7 +293,12 @@
 		{/if}
 	</fieldset>
 	<fieldset class="min-h-128 md:row-span-2 md:min-h-0">
-		<legend>Config</legend>
+		<legend>
+			Config
+			<button type="button" class="legend-action" onclick={resetConfig}>
+				[{resetPending ? 'Confirm reset' : 'Reset'}]
+			</button>
+		</legend>
 		<div class="flex h-full min-h-0 flex-col gap-2">
 			<nav
 				class="flex max-w-full gap-1 overflow-x-auto border-b-2 border-border pb-2"
