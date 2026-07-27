@@ -20,6 +20,8 @@
 	<pre
 		class="m-0 text-left text-[clamp(0.5rem,2.25vw,1.25rem)] leading-[1.1] font-bold text-accent font-[inherit]"
 		aria-hidden="true">{figletCode}</pre>
-	<p class="mt-6">{errorMessage}</p>
-	<a class="mt-6 text-accent hover:underline" href={resolve('/')}>Main page &gt;&gt;</a>
+	<span class="mt-6"
+		>{errorMessage} -
+		<a class="mt-6 text-accent hover:underline" href={resolve('/')}>Main page &gt;&gt;</a>
+	</span>
 </section>
