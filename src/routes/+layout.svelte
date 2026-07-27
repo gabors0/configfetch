@@ -44,7 +44,7 @@
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 <header
-	class="fixed top-2 right-2 left-2 z-10 flex h-12 items-center justify-between gap-3 border-4 border-border bg-bg py-2 px-3 text-accent"
+	class="fixed top-2 right-2 left-2 z-10 flex h-12 items-center justify-between gap-3 border-2 border-border bg-bg py-2 px-3 text-accent"
 >
 	<span
 	>
