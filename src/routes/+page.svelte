@@ -315,6 +315,10 @@
 	}
 </script>
 
+<svelte:head>
+    <title>about configfetch</title>
+</svelte:head>
+
 <div
 	class={[
 		'm-2 grid min-h-[calc(100dvh-4.25rem)] grid-cols-1 gap-x-3 gap-y-1 *:p-2 md:h-[calc(100dvh-4.25rem)] md:grid-cols-2',
