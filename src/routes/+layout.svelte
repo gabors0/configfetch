@@ -46,15 +46,15 @@
 <header
 	class="fixed top-2 right-2 left-2 z-10 flex h-12 items-center justify-between gap-3 border-2 border-border bg-bg py-2 px-3 text-accent"
 >
-	<span
-	>
+	<span>
 		<span
-		role="group"
-		aria-label="Site title"
-		onmouseenter={() => (titleHovered = true)}
-		onmouseleave={() => (titleHovered = false)}
-		>{titleHovered ? 'fastfetch config maker' : 'configfetch'}</span>
-			<span class="text-fg-dim">ver. {VERSION}</span>
+			role="group"
+			aria-label="Site title"
+			onmouseenter={() => (titleHovered = true)}
+			onmouseleave={() => (titleHovered = false)}
+			>{titleHovered ? 'fastfetch config maker' : 'configfetch'}</span
+		>
+		<span class="text-fg-dim">ver. {VERSION}</span>
 	</span>
 	<div class="flex items-center gap-3 flex-row">
 		<div class="flex items-center gap-1.5" role="group" aria-label="Theme">
@@ -85,6 +85,9 @@
 	:global(body) {
 		@apply bg-bg text-fg;
 		font-family: 'Monaspace Argon NF', 'Geist Mono', monospace;
+	}
+	:global(pre) {
+		font-family: inherit;
 	}
 	a:hover {
 		@apply underline;
