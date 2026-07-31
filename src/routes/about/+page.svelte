@@ -135,8 +135,19 @@
 	});
 </script>
 
+<svelte:head>
+    <title>about configfetch</title>
+</svelte:head>
+
 <div class="mx-2 mt-[1.20rem] mb-2 min-h-[calc(100dvh-4.95rem)] min-w-0 border-2 border-border p-2">
-	<p><span class="text-light-green">$</span> <span class="text-light-blue">fastfetch</span></p>
+	<p>
+		<span class="text-light-green">$</span>
+		<a
+			href="https://github.com/fastfetch-cli/fastfetch/"
+			target="_blank"
+			class="text-blue hover:underline">fastfetch</a
+		>
+	</p>
 	<div class="mt-2 min-w-max" aria-label="Fastfetch output">
 		{#each outputRows.slice(0, visibleRows) as row, rowIndex (rowIndex)}
 			<div

@@ -52,8 +52,14 @@
 			aria-label="Site title"
 			onmouseenter={() => (titleHovered = true)}
 			onmouseleave={() => (titleHovered = false)}
-			>{titleHovered ? 'fastfetch config maker' : 'configfetch'}</span
 		>
+			{#if titleHovered}
+				<a class="hover:underline" href="https://github.com/fastfetch-cli/fastfetch">fastfetch</a>
+				config maker
+			{:else}
+				configfetch
+			{/if}
+		</span>
 		<span class="text-fg-dim">ver. {VERSION}</span>
 	</span>
 	<div class="flex items-center gap-3 flex-row">
