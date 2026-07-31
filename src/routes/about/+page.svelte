@@ -35,29 +35,28 @@
 	];
 
 	const outputRows: OutputRow[] = $derived([
-		{ logo: `                  `, key: '', value: '' },
-		{ logo: `         *        `, key: 'you@ff.gs0.me', value: '' },
-		{ logo: `        /!\\      `, key: '', value: '-----------' },
+		{ logo: `                  `, key: 'you@ff.gs0.me', value: '' },
+		{ logo: `         *        `, key: '', value: '-----------' },
 		{
-			logo: `       /!!!$$$   `,
+			logo: `        /!\\       `,
 			key: 'Name',
 			value: `: configfetch v${VERSION}`
 		},
 		{
-			logo: `      /!!!!$$    `,
+			logo: `       /!!!$$$    `,
 			key: 'Description',
 			value: ': web-based fastfetch config generator'
 		},
-		{ logo: `    $$$$$!$$$$   `, key: 'Framework', value: ': SvelteKit 5' },
-		{ logo: `    $$!!!!!$$\\   `, key: 'Language', value: ': TypeScript', printDelay: 130 },
-		{ logo: `   /$$$$$!!$$ \\  `, key: 'Styles', value: ': Tailwind CSS 4' },
+		{ logo: `      /!!!!$$     `, key: 'Framework', value: ': SvelteKit 5' },
+		{ logo: `    $$$$$!$$$$    `, key: 'Language', value: ': TypeScript', printDelay: 130 },
+		{ logo: `    $$!!!!!$$\\    `, key: 'Styles', value: ': Tailwind CSS 4' },
 		{
-			logo: `  *------------*  `,
+			logo: `   /$$$$$!!$$ \\   `,
 			key: 'Font',
 			value: ': Monaspace Argon NF'
 		},
 		{
-			logo: `                  `,
+			logo: `  *------------*  `,
 			key: 'Theme',
 			value: `: ${selectedTheme}`
 		},
@@ -84,7 +83,8 @@
 			value: '',
 			colors: ansiColors.slice(8),
 			printDelay: 0
-		}
+		},
+		{ logo: `                  `, key: '', value: '' }
 	]);
 
 	let visibleRows = $state(0);
