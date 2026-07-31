@@ -2,7 +2,7 @@
 
 A browser-based editor with the goal of making [fastfetch](https://github.com/fastfetch-cli/fastfetch) configuration files easier.
 
-> This project is currently in alpha. The generated configs should work tho
+> This project is still unfinished. The generated configs should work though
 
 ## Features
 
