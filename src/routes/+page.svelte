@@ -597,7 +597,7 @@
 <style lang="postcss">
 	@reference "/src/routes/layout.css";
 	fieldset {
-		@apply m-0 min-w-0 border-4 border-border px-2;
+		@apply m-0 min-w-0 border-2 border-border px-2;
 	}
 	legend {
 		@apply text-accent-muted;
