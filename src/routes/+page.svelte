@@ -316,7 +316,7 @@
 </script>
 
 <svelte:head>
-    <title>about configfetch</title>
+    <title>configfetch</title>
 </svelte:head>
 
 <div
