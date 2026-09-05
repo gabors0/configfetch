@@ -316,18 +316,18 @@
 </script>
 
 <svelte:head>
-    <title>configfetch</title>
+	<title>configfetch</title>
 </svelte:head>
 
 <div
 	class={[
-		'm-2 grid min-h-[calc(100dvh-4.25rem)] grid-cols-1 gap-x-3 gap-y-1 *:p-2 md:h-[calc(100dvh-4.25rem)] md:grid-cols-2',
+		'm-2 grid min-h-[calc(100dvh-4.5rem)] grid-cols-1 gap-x-3 gap-y-1 *:p-2 md:h-[calc(100dvh-4.5rem)] md:grid-cols-2',
 		layoutRows()
 	]}
 >
-	<fieldset class="min-h-0 overflow-auto">
+	<fieldset class="max-h-[60dvh] min-h-0 overflow-auto md:max-h-none">
 		<legend>
-			<span class="hidden items-center gap-1 text-accent-muted md:flex">
+			<span class="flex flex-wrap items-center gap-1 text-accent-muted">
 				Preview
 				<button
 					type="button"
@@ -341,24 +341,25 @@
 					type="button"
 					class="legend-action"
 					onclick={() => (previewFontSize += 1)}
+					aria-label="Increase preview font size"
 				>
-				[+]
+					[+]
 				</button>
 				<button
 					type="button"
 					class="legend-action"
 					onclick={() => (previewFontSize = Math.max(previewFontSize - 1, 1))}
+					aria-label="Decrease preview font size"
 				>
-				[-]
+					[-]
 				</button>
 			</span>
-			<span class="block md:hidden">Preview</span>
 		</legend>
 		{#if showPreview}
 			<Preview {config} {previewFontSize} />
 		{/if}
 	</fieldset>
-	<fieldset class="min-h-128 md:row-span-2 md:min-h-0">
+	<fieldset class="h-[min(70dvh,40rem)] min-h-0 md:row-span-2 md:h-auto">
 		<legend>
 			Config
 			<button type="button" class="legend-action" onclick={resetConfig}>
@@ -367,7 +368,7 @@
 		</legend>
 		<div class="flex h-full min-h-0 flex-col gap-2">
 			<nav
-				class="flex max-w-full gap-1 overflow-x-auto border-b-2 border-border pb-2"
+				class="flex max-w-full shrink-0 gap-1 overflow-x-auto border-b-2 border-border pb-2"
 				aria-label="Config sections"
 			>
 				{#each tabs as tab (tab.id)}
@@ -458,9 +459,10 @@
 								<summary
 									class="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 px-2 py-2 text-sm text-fg-muted"
 								>
-									<div>
+									<div class="flex min-w-0 items-center gap-1">
 										<input
 											type="checkbox"
+											aria-label={`Enable ${moduleItem.type}`}
 											checked={enabled}
 											onclick={(event) => event.stopPropagation()}
 											onchange={(event) => setModuleEnabled(moduleItem, inputChecked(event))}
@@ -577,7 +579,7 @@
 	</fieldset>
 	<fieldset class="overflow-hidden">
 		<legend>
-			<span class="hidden items-center gap-1 text-accent-muted md:flex">
+			<span class="flex flex-wrap items-center gap-1 text-accent-muted">
 				Export
 				<button
 					type="button"
@@ -590,10 +592,10 @@
 				<button type="button" class="legend-action" onclick={copyExport}>[copy]</button>
 				<button type="button" class="legend-action" onclick={downloadExport}>[download]</button>
 			</span>
-			<span class="block md:hidden">Export</span>
 		</legend>
 		{#if showExport}
-			<pre class="h-full overflow-auto text-xs whitespace-pre-wrap text-fg-muted">{exportJson}</pre>
+			<pre
+				class="max-h-96 overflow-auto text-xs whitespace-pre-wrap wrap-anywhere text-fg-muted md:h-full md:max-h-none">{exportJson}</pre>
 		{/if}
 	</fieldset>
 </div>
@@ -631,6 +633,21 @@
 	}
 	.legend-action {
 		@apply cursor-pointer hover:underline;
+	}
+	@media (max-width: 767px), (pointer: coarse) {
+		button {
+			min-height: 44px;
+			min-width: 44px;
+		}
+		input,
+		select {
+			min-height: 44px;
+			font-size: 16px;
+		}
+		input[type='checkbox'] {
+			width: 44px;
+			flex-shrink: 0;
+		}
 	}
 	.module-disclosure-open,
 	details[open] .module-disclosure-closed {

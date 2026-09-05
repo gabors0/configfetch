@@ -44,7 +44,7 @@
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 <header
-	class="fixed top-2 right-2 left-2 z-10 flex h-12 items-center justify-between gap-3 border-2 border-border bg-bg py-2 px-3 text-accent"
+	class="sticky top-0 z-10 m-2 grid grid-cols-[1fr_auto] items-center gap-1 border-2 border-border bg-bg px-3 py-2 text-accent sm:flex sm:h-12 sm:justify-between sm:gap-3"
 >
 	<span>
 		<span
@@ -54,16 +54,23 @@
 			onmouseleave={() => (titleHovered = false)}
 		>
 			{#if titleHovered}
-				<a class="hover:underline" href="https://github.com/fastfetch-cli/fastfetch">fastfetch</a>
-				config maker
+				<span class="lg:hidden">configfetch</span>
+				<span class="hidden lg:inline">
+					<a class="hover:underline" href="https://github.com/fastfetch-cli/fastfetch">fastfetch</a>
+					config maker
+				</span>
 			{:else}
 				configfetch
 			{/if}
 		</span>
 		<span class="text-fg-dim">ver. {VERSION}</span>
 	</span>
-	<div class="flex items-center gap-3 flex-row">
-		<div class="flex items-center gap-1.5" role="group" aria-label="Theme">
+	<div class="contents sm:flex sm:items-center sm:gap-3">
+		<div
+			class="col-span-2 row-start-2 flex items-center gap-1 sm:gap-1.5"
+			role="group"
+			aria-label="Theme"
+		>
 			{#each themes as theme (theme.value)}
 				<button
 					type="button"
@@ -78,13 +85,13 @@
 			{/each}
 		</div>
 		{#if page.url.pathname === '/'}
-			<a href={resolve('/about')}>About&gt;&gt;</a>
+			<a class="col-start-2 row-start-1" href={resolve('/about')}>About&gt;&gt;</a>
 		{:else if page.url.pathname === '/about'}
-			<a href={resolve('/')}>&lt;&lt;Back</a>
+			<a class="col-start-2 row-start-1" href={resolve('/')}>&lt;&lt;Back</a>
 		{/if}
 	</div>
 </header>
-<main class="pt-13">{@render children()}</main>
+<main>{@render children()}</main>
 
 <style lang="postcss">
 	@reference "/src/routes/layout.css";
@@ -99,7 +106,7 @@
 		@apply underline;
 	}
 	.theme-picker {
-		@apply size-4 cursor-pointer border-2 border-fg-dim;
+		@apply size-10 shrink-0 cursor-pointer border-2 border-fg-dim sm:size-4;
 	}
 	.theme-picker:hover,
 	.theme-picker:focus-visible,

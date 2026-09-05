@@ -136,7 +136,7 @@
 </script>
 
 <svelte:head>
-    <title>about configfetch</title>
+	<title>about configfetch</title>
 </svelte:head>
 
 <div class="mx-2 mt-[1.20rem] mb-2 min-h-[calc(100dvh-4.95rem)] min-w-0 border-2 border-border p-2">
@@ -148,10 +148,11 @@
 			class="text-blue hover:underline">fastfetch</a
 		>
 	</p>
-	<div class="mt-2 min-w-max" aria-label="Fastfetch output">
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex (Keyboard users need to scroll the terminal horizontally.) -->
+	<div class="mt-2 overflow-x-auto" role="region" tabindex="0" aria-label="Fastfetch output">
 		{#each outputRows.slice(0, visibleRows) as row, rowIndex (rowIndex)}
 			<div
-				class="grid grid-cols-[19ch_auto]"
+				class="grid min-w-max grid-cols-[19ch_auto]"
 				class:leading-none={Boolean(row.colors)}
 				class:leading-5={!row.colors}
 			>
