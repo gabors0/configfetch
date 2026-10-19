@@ -4,7 +4,7 @@
 	import debianLogo from '$lib/assets/debian.svg';
 	import type { LogoConfig } from '$lib/config/types';
 
-	let { logo }: { logo: LogoConfig } = $props();
+	let { logo, color = '' }: { logo: LogoConfig; color?: string } = $props();
 
 	function padding(side: 'top' | 'left' | 'right') {
 		const value =
@@ -23,6 +23,7 @@
 	style:padding-top={`${padding('top')}lh`}
 	style:padding-left={`${padding('left')}ch`}
 	style:padding-right={`${padding('right')}ch`}
+	style={['auto', 'builtin', 'small', 'file', 'data'].includes(String(logo.type)) ? color : ''}
 >
 	{#if logo.type == 'none'}
 		<pre></pre>

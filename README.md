@@ -20,7 +20,7 @@ A browser-based editor with the goal of making [fastfetch](https://github.com/fa
 
 #### Small
 
-- Add color support to the preview
+- ~~Add color support to the preview~~
 - ~~Add, remove and change the order of the modules~~
 
 ## Development

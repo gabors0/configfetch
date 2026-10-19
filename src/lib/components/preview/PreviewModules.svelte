@@ -1,12 +1,21 @@
 <script lang="ts">
 	import type { ModuleConfig, ModuleEntry } from '$lib/config/types';
+	import { colorSpecToStyle, styleToCss } from './ansiColor';
 	import { modulePreviews } from './modulePreviewData';
+
+	type PreviewColors = { keys: string; title: string; output: string; separator: string };
 
 	let {
 		modules,
 		separator = ': ',
-		keyType = 'string'
-	}: { modules: ModuleEntry[]; separator?: string; keyType?: string } = $props();
+		keyType = 'string',
+		colors = { keys: '', title: '', output: '', separator: '' }
+	}: {
+		modules: ModuleEntry[];
+		separator?: string;
+		keyType?: string;
+		colors?: PreviewColors;
+	} = $props();
 
 	const ansiColors = [
 		'var(--color-black)',
@@ -79,6 +88,20 @@
 		].filter((row) => row.length > 0);
 	}
 
+	function moduleColor(module: ModuleConfig, name: string, fallback: string) {
+		const color = module.color;
+		const value =
+			typeof color === 'object' && color !== null ? (color as Record<string, unknown>)[name] : '';
+		return typeof value === 'string' && value.trim()
+			? styleToCss(colorSpecToStyle(value))
+			: fallback;
+	}
+
+	function moduleOutputColor(module: ModuleConfig) {
+		const value = stringOption(module, 'outputColor');
+		return value.trim() ? styleToCss(colorSpecToStyle(value)) : '';
+	}
+
 	function colorSymbol(module: ModuleConfig) {
 		return colorSymbols[stringOption(module, 'symbol', 'block')] ?? colorSymbols.block;
 	}
@@ -91,10 +114,14 @@
 		{:else if module.type === 'title'}
 			{@const key = moduleKey(module)}
 			<div>
-				{#if key.trim()}<span>{key}{separator}</span>{/if}<span>user@hostname</span>
+				{#if key.trim()}<span style={colors.keys}>{key}</span><span style={colors.separator}
+						>{separator}</span
+					>{/if}<span style={moduleColor(module, 'user', colors.title)}>user</span><span
+					style={moduleColor(module, 'at', '')}>@</span
+				><span style={moduleColor(module, 'host', colors.title)}>hostname</span>
 			</div>
 		{:else if module.type === 'separator'}
-			<div>{separatorLine(module)}</div>
+			<div style={moduleOutputColor(module)}>{separatorLine(module)}</div>
 		{:else if module.type === 'colors'}
 			<div style:padding-left={`${numberOption(module, 'paddingLeft')}ch`}>
 				{#each colorRowsFor(module) as row, rowIndex (rowIndex)}
@@ -113,7 +140,9 @@
 		{:else}
 			{@const key = moduleKey(module)}
 			<div>
-				{#if key}<span>{key}{separator}</span>{/if}<span
+				{#if key}<span style={colors.keys}>{key}</span><span style={colors.separator}
+						>{separator}</span
+					>{/if}<span style={colors.output}
 					>{modulePreviews[module.type]?.value ?? 'Example value'}</span
 				>
 			</div>
